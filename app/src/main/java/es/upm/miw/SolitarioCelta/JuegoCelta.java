@@ -23,6 +23,9 @@ class JuegoCelta {
             { 0, -2},   // Izda
             { 2,  0},   // Abajo
             {-2,  0}    // Arriba
+
+			//x = desplazamiento[0][0]
+			//y = desplazamiento[0][1]
     };
 
     private int numFichas;

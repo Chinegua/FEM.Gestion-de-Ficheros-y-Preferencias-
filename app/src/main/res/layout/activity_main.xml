@@ -14,7 +14,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="288dp">
 
         <!-- Row 0 -->
         <RadioButton
@@ -192,5 +192,18 @@
             android:layout_toRightOf="@id/p63"
             android:layout_below="@id/p54"/>
 
+    </RelativeLayout>
+    
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <Chronometer
+            android:id="@+id/chrono"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:textSize="120sp"
+            android:textStyle="bold" />
     </RelativeLayout>
 </LinearLayout>

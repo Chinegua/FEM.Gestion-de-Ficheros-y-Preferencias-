@@ -22,6 +22,7 @@ public class AlertDialogFragment extends DialogFragment {
                             public void onClick(DialogInterface dialog, int which) {
                                 main.juego.reiniciar();
                                 main.mostrarTablero();
+                                main.activateChrono();
                             }
                         }
                 )

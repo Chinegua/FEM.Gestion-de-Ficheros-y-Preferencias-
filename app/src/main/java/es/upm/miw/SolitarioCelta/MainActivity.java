@@ -3,22 +3,45 @@ package es.upm.miw.SolitarioCelta;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.SystemClock;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Chronometer;
 import android.widget.RadioButton;
 import android.widget.Toast;
 
 public class MainActivity extends Activity {
 
 	JuegoCelta juego;
+    Chronometer chronometer;
     private final String GRID_KEY = "GRID_KEY";
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         juego = new JuegoCelta();
+        activateChrono();
         mostrarTablero();
+    }
+
+    public void activateChrono(){
+        chronometer = (Chronometer) findViewById(R.id.chrono);
+        chronometer.start();
+    }
+
+    public void desactivateChrono(){
+        chronometer.setBase(SystemClock.elapsedRealtime());
+        chronometer.stop();
+        long chronoValue = chronometer.getBase();
+
+        Log.i("MiW",Long.toString(chronoValue));
+    }
+
+    public void resetChrono(){
+        desactivateChrono();
+        activateChrono();
     }
 
     /**
@@ -36,6 +59,7 @@ public class MainActivity extends Activity {
 
         mostrarTablero();
         if (juego.juegoTerminado()) {
+            desactivateChrono();
             // TODO guardar puntuación
             new AlertDialogFragment().show(getFragmentManager(), "ALERT_DIALOG");
         }
@@ -87,6 +111,13 @@ public class MainActivity extends Activity {
         return true;
     }
 
+    public boolean onRestart(Bundle savedInstanceState){
+        super.onRestart();
+        desactivateChrono();
+
+        return true;
+    }
+
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.opcAjustes:
@@ -95,6 +126,15 @@ public class MainActivity extends Activity {
             case R.id.opcAcercaDe:
                 startActivity(new Intent(this, AcercaDe.class));
                 return true;
+
+            case R.id.opcReiniciarPartida:
+                this.juego.reiniciar();
+                mostrarTablero();
+                resetChrono();
+
+
+                return true;
+
 
             // TODO!!! resto opciones
 
