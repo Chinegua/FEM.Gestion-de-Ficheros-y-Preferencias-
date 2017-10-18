@@ -1,6 +1,7 @@
 package es.upm.miw.SolitarioCelta;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.SystemClock;
@@ -12,16 +13,25 @@ import android.widget.Chronometer;
 import android.widget.RadioButton;
 import android.widget.Toast;
 
+import java.io.BufferedReader;
+import java.io.FileOutputStream;
+import java.io.InputStreamReader;
+
 public class MainActivity extends Activity {
 
 	JuegoCelta juego;
     Chronometer chronometer;
+
     private final String GRID_KEY = "GRID_KEY";
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         juego = new JuegoCelta();
+
+        if (savedInstanceState != null) {
+            this.juego.deserializaTablero(savedInstanceState.getString(GRID_KEY));
+        }
         activateChrono();
         mostrarTablero();
     }
@@ -118,6 +128,37 @@ public class MainActivity extends Activity {
         return true;
     }
 
+    public void guardarPartida(){
+        String value = juego.serializaTablero();
+        try {
+            FileOutputStream fos = openFileOutput("saved.txt", Context.MODE_PRIVATE);
+            fos.write(value.getBytes());
+            fos.close();
+            Toast.makeText(this,"Partida Guardada", Toast.LENGTH_SHORT).show();
+
+        }
+        catch (Exception ex)
+        {
+            Toast.makeText(this,"Error al guardar", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void getPartida(){
+        try {
+            BufferedReader fin = new BufferedReader(new InputStreamReader(openFileInput("saved.txt")));
+            String linea = fin.readLine();
+
+            juego.deserializaTablero(linea);
+            mostrarTablero();
+
+            fin.close();
+        }
+        catch (Exception e){
+            Toast.makeText(this,"Error al recuperar", Toast.LENGTH_SHORT).show();
+
+        }
+    }
+
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.opcAjustes:
@@ -131,9 +172,15 @@ public class MainActivity extends Activity {
                 this.juego.reiniciar();
                 mostrarTablero();
                 resetChrono();
-
-
                 return true;
+
+            case R.id.opcGuardarPartida:
+                guardarPartida();
+                return true;
+            case R.id.opcRecuperarPartida:
+                getPartida();
+                return true;
+
 
 
             // TODO!!! resto opciones
