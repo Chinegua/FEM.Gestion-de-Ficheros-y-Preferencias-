@@ -4,9 +4,10 @@ import android.app.Activity;
 import android.app.DialogFragment;
 import android.content.Context;
 import android.content.Intent;
-import android.media.MediaPlayer;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,25 +19,41 @@ import android.widget.Toast;
 import java.io.BufferedReader;
 import java.io.FileOutputStream;
 import java.io.InputStreamReader;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
+import es.upm.miw.SolitarioCelta.models.EntityRepository;
+
 
 public class MainActivity extends Activity {
 
 	JuegoCelta juego;
     Chronometer chronometer;
+    SharedPreferences preferencias;
 
     private final String GRID_KEY = "GRID_KEY";
-    private final String JUEGO = "JUEGO";
+    private final String TIME = "TIME";
+    private EntityRepository db;
+
 
 
     public void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         juego = new JuegoCelta();
+        db = new EntityRepository(getApplicationContext());
+        Log.i("MiW",Long.toString(db.count()));
+
 
         if (savedInstanceState != null) {
             this.juego.deserializaTablero(savedInstanceState.getString(GRID_KEY));
+            this.activateChronoDefined(savedInstanceState.getLong(TIME));
+
         }
-        activateChrono();
+        else{
+            activateChrono();
+        }
         //MediaPlayer mp = new MediaPlayer();
         //mp = MediaPlayer.create(this, R.raw.reloj);
         //mp.setLooping(true);
@@ -49,6 +66,12 @@ public class MainActivity extends Activity {
         chronometer.start();
     }
 
+    public void activateChronoDefined(Long time){
+        chronometer = (Chronometer) findViewById(R.id.chrono);
+        chronometer.setBase(time);
+        chronometer.start();
+
+    }
     public void desactivateChrono(){
         chronometer.setBase(SystemClock.elapsedRealtime());
         chronometer.stop();
@@ -78,6 +101,12 @@ public class MainActivity extends Activity {
         mostrarTablero();
         if (juego.juegoTerminado()) {
             desactivateChrono();
+            preferencias = PreferenceManager.getDefaultSharedPreferences(this);
+            Calendar cal = Calendar.getInstance();
+            int dayOfMonth = cal.get(Calendar.DAY_OF_MONTH);
+            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+
+            db.onSave(preferencias.getString("nombreJugador","null"),dayOfMonth,new SimpleDateFormat("MMM").format(cal.getTime()),sdf.format(cal.getTime()).toString(),juego.countFichas());
             // TODO guardar puntuación
             new AlertDialogFragment().show(getFragmentManager(), "ALERT_DIALOG");
         }
@@ -109,6 +138,7 @@ public class MainActivity extends Activity {
      */
     public void onSaveInstanceState(Bundle outState) {
         outState.putString(GRID_KEY, juego.serializaTablero());
+        outState.putLong(TIME,chronometer.getBase());
 
         super.onSaveInstanceState(outState);
     }
@@ -181,12 +211,26 @@ public class MainActivity extends Activity {
                 guardarPartida();
                 return true;
             case R.id.opcRecuperarPartida:
-                getPartida();
+                try {
+                    BufferedReader fin = new BufferedReader(new InputStreamReader(openFileInput("saved.txt")));
+                    String linea = fin.readLine();
+                    if (!juego.serializaTablero().toString().equals(linea.toString())){
+                        Log.i("MiW",juego.serializaTablero().toString());
+                        Log.i("MiW",linea);
+
+                        getPartida();
+                    }
+
+                }
+                catch (Exception e){}
+                return true;
+            case R.id.opcMejoresResultados:
+                Intent intent = new Intent(this, MejoresResultadosActivity.class);
+                startActivity(intent);
                 return true;
 
 
-
-            // TODO!!! resto opciones
+                // TODO!!! resto opciones
 
             default:
                 Toast.makeText(

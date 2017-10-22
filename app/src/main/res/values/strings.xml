@@ -16,6 +16,7 @@
 
     <!-- Acerca de -->
     <string name="aboutText">Acerca de</string>
+    <string name="mejoresResultados">Mejores Resultados</string>
     <string name="aboutMessage">El juego consiste en ir comiendo piezas
     (en horizontal o en vertical) hasta conseguir que sólo quede una pieza
     en el centro. En cada movimiento, la pieza puede saltar solo una pieza.</string>
@@ -37,8 +38,6 @@
 
     <string name="RestartText">¿Va a perder el progreso, desea continuar?</string>
     <string name="RestarAlert">¡Atencion!</string>
-
-
 
 
 </resources>

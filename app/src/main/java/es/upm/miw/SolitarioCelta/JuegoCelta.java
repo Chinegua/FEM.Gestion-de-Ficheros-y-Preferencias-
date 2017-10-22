@@ -158,6 +158,18 @@ class JuegoCelta {
 		return str;
 	}
 
+	public int countFichas(){
+		int sum = 0;
+		for (int i = 0; i < TAMANIO; i++) {
+			for (int j = 0; j < TAMANIO; j++){
+				if (tablero[i][j] == 1){
+					sum ++;
+				}
+			}
+		}
+		return sum;
+	}
+
 	/**
 	 * recupera el estado del tablero a partir de su representación serializada
 	 * @param str representación del tablero

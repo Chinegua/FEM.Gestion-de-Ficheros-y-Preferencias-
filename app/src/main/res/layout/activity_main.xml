@@ -8,15 +8,18 @@
     tools:context=".MainActivity"
     tools:ignore="RtlHardcoded">
 
-    <TextView
-        android:id="@+id/barraEstado"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+
+        <Chronometer
+            android:id="@+id/chrono"
+            android:gravity="center"
+            android:textSize="30sp"
+            android:textStyle="bold"
+            android:layout_height="51dp"
+            android:layout_width="match_parent" />
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="288dp"
-        >
+        android:layout_height="wrap_content">
 
         <!-- Row 0 -->
         <RadioButton
@@ -253,18 +256,7 @@
             android:buttonTint="@color/black"
             android:layout_toRightOf="@id/p63" />
 
+
     </RelativeLayout>
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <Chronometer
-            android:id="@+id/chrono"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:textSize="120sp"
-            android:textStyle="bold" />
-    </RelativeLayout>
 </LinearLayout>
