@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Chronometer;
 import android.widget.RadioButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
@@ -54,6 +55,10 @@ public class MainActivity extends Activity {
         else{
             activateChrono();
         }
+
+        int number = juego.countFichas();
+        TextView tvCount = (TextView) findViewById(R.id.fichasCount);
+        tvCount.setText( Integer.toString(number));
         //MediaPlayer mp = new MediaPlayer();
         //mp = MediaPlayer.create(this, R.raw.reloj);
         //mp.setLooping(true);
@@ -97,6 +102,11 @@ public class MainActivity extends Activity {
         int j = resourceName.charAt(2) - '0';   // columna
 
         juego.jugar(i, j);
+
+        int number = juego.countFichas();
+
+        TextView tvCount = (TextView) findViewById(R.id.fichasCount);
+        tvCount.setText(Integer.toString(number));
 
         mostrarTablero();
         if (juego.juegoTerminado()) {
